@@ -13,18 +13,18 @@ export function request_cid(key: string, arg1: string, arg2: string | null): Pro
         client.on("connect", () => {
             console.log("connected to mqtt broker")
 
-            client.subscribe("rne/hashmanager/client/return_data", e => {
+            client.subscribe("rne/hashmanager/client/filtered_hash", e => {
                 if (e) {
                     console.log("reject")
                     reject(e)
                 }
             })
 
-            client.publish("rne/client/hashmanager/retrieve_with_filter", request_data)
+            client.publish("rne/client/hashmanager/retrieve_with_filter", `${request_data}/5`) // TODO remove hardcoding
         })
 
         client.on("message", (topic, message) => {
-            if (topic == "rne/hashmanager/client/return_data") {
+            if (topic == "rne/hashmanager/client/filtered_hash") {
                 const hashes = message.toString().split("/")
                 resolve(hashes)
             }
