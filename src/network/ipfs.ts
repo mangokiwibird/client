@@ -11,23 +11,22 @@ const createNode = async () => {
     const helia = await createHelia({
         blockstore
     })
+    
     const helia_fs = unixfs(helia)
 
     return helia_fs
 }
 
-export async function request_files(hash: string, target: string) {
+export async function download_from_ipfs(hash: string, target: string) {
     const heliaNode = await createNode()
 
     const stream = fs.createWriteStream(target)
 
-    stream.once("open", async (fd) => {
-        console.log("WRITE STREAM OPENED!!")
+    stream.once("open", async (_fd) => {
         const cid = CID.parse(hash)
         for await (const buf of heliaNode.cat(cid)) {
             stream.write(buf)
         }
         stream.end()
-        console.log("SUCCESS!!!")
     })
 }

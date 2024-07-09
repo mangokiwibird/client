@@ -1,11 +1,14 @@
-import { request_hash } from "./request_hashmanager";
-import { request_files } from "./request_ipfs";
+import { request_cid } from "./network/hashmanager";
+import { download_from_ipfs } from "./network/ipfs";
 
-let i = 1
+async function main() {
+    const hashes = await request_cid("date", "2008-01-20 10:00:00", "2030-01-20 10:00:00")
 
-request_hash("date", "2008-01-20 10:00:00", "2030-01-20 10:00:00", async (hashes) => {
     for (let hash of hashes) {
-        await request_files(hash, `dummy/${hash}.txt`)
-        i+=1
+        console.log(`DOWNLOADING FROM IPFS: ${hash}`)
+        await download_from_ipfs(hash, `dummy/${hash}.txt`)
+        console.log(`FINISHED DOWNLOADING: ${hash}`)
     }
-})
+}
+
+main()
