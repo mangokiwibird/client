@@ -4,12 +4,13 @@ client for ipfs
 ## Explanation
 ```typescript
 async function main() {
-    const hashes = await request_cid("date", "2008-01-20 10:00:00", "2030-01-20 10:00:00")
+    const hashes = await request_cid("date", 4, "2008-01-20 10:00:00", "2030-01-20 10:00:00")
 
     for (let hash of hashes) {
-        console.log(`DOWNLOADING FROM IPFS: ${hash}`)
         await download_from_ipfs(hash, `dummy/${hash}.txt`)
-        console.log(`FINISHED DOWNLOADING: ${hash}`)
+        const metadata = await request_metadata(hash)
+
+        console.log(metadata)
     }
 }
 ```
@@ -25,5 +26,6 @@ const hashes = request_cid("<key>", "<arg1>", "<arg2?>")
 - ***status***  :   `arg1`에 `standing`, `sitting`, `lying` 등 `status` 값에 대응되는 값을 인수로 받아 일치하는 파일의 해시들을 불러옵니다
 - ***action***  :   `arg1`에 `kitchen`, `bathroom`, `dining_room` 등 `action` 값에 대응되는 값을 인수로 받아 일치하는 파일의 해시들을 불러옵니다
 
+`request_metadata` 함수는 인수로 받은 `hash` 값을 이용해 `hashmanager`에서 메타데이터를 받아옵니다. 
 
 `download_from_ipfs` 함수는 인수로 받은 `CID` 값을 이용해 IPFS 네트워크에서 파일을 다운로드 받아주는 함수입니다. 
